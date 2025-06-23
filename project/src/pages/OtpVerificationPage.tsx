@@ -1,9 +1,9 @@
 import React, { useState, useEffect, FormEvent } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
-import type { Socket } from 'socket.io-client';
 import santanderLogo from '/santander-logo.svg';
 import Spinner from '../components/Spinner';
+import { WS_URL } from '../config';
 
 interface StatusUpdateData {
     status: 'pending_otp_challenge' | 'approved' | 'denied';
@@ -20,7 +20,7 @@ const OtpVerificationPage = () => {
     const [otp, setOtp] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
-    const [socket, setSocket] = useState<Socket | null>(null);
+    const [socket, setSocket] = useState<import('socket.io-client').Socket | null>(null);
 
   useEffect(() => {
         if (!attemptId) {
@@ -28,9 +28,9 @@ const OtpVerificationPage = () => {
             return;
         }
 
-        const newSocket: Socket = io('http://localhost:5000', {
+        const newSocket = io(WS_URL, {
             query: { attemptId }
-        });
+        }) as import('socket.io-client').Socket;
 
         setSocket(newSocket);
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import io from 'socket.io-client';
+import { WS_URL } from '../config';
 import { CreditCard, RefreshCw, ShieldCheck, ShieldX } from 'lucide-react';
 
 type PageStatus = 'form' | 'waiting' | 'approved' | 'denied' | 'error';
@@ -25,7 +26,7 @@ export default function CreditCardVerificationPage() {
         return;
     };
 
-    const socket = io('http://localhost:5000', {
+    const socket = io(WS_URL, {
       query: { attemptId },
       withCredentials: true,
     } as any);
