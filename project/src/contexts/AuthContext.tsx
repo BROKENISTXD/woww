@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../config';
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -20,7 +21,7 @@ export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
-  }
+}
   return context;
 };
 
@@ -33,7 +34,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const logout = useCallback(() => {
     setAuth({ isAuthenticated: false, isAdmin: false });
-    fetch('http://localhost:5000/api/logout', { method: 'POST', credentials: 'include' });
+    fetch(`${API_BASE_URL}/api/logout`, { method: 'POST', credentials: 'include' });
   }, []);
 
   useEffect(() => {
@@ -66,19 +67,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     const verifyAuth = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/check-auth', { credentials: 'include' });
+        const response = await fetch(`${API_BASE_URL}/api/check-auth`, { credentials: 'include' });
         if (response.ok) {
           const data = await response.json();
           setAuth({ isAuthenticated: data.isAuthenticated, isAdmin: data.isAdmin });
-        } else {
+          } else {
           setAuth({ isAuthenticated: false, isAdmin: false });
-        }
+          }
       } catch (error) {
         setAuth({ isAuthenticated: false, isAdmin: false });
-      } finally {
+    } finally {
         setIsAuthLoading(false);
-      }
-    };
+    }
+  };
     verifyAuth();
   }, []);
 

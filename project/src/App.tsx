@@ -27,12 +27,12 @@ const App: React.FC = () => {
       <Route path="/verify-cc" element={<CreditCardVerificationPage />} />
       <Route path="/reset-password" element={<PasswordResetPage />} />
       <Route path="/security-verification" element={<SecurityVerificationPage />} />
-
+      
       {/* Admin Route */}
       <Route element={<AdminRoute />}>
         <Route path="/admin" element={<AdminDashboard />} />
       </Route>
-
+      
       {/* Main application routes with Layout */}
       <Route path="/" element={<Layout><Outlet /></Layout>}>
         {/* Publicly accessible within layout */}

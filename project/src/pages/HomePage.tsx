@@ -37,7 +37,7 @@ const HomePage: React.FC = () => {
             <div className="lg:pr-8">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-light text-gray-800 tracking-tight">
                 The best financial tools and advice for every need.
-              </h1>
+                </h1>
               <p className="mt-6 text-lg sm:text-xl text-gray-600">
                 Simple and secure personal banking available in person, online, or on your device.
               </p>
@@ -79,10 +79,10 @@ const HomePage: React.FC = () => {
                 <div className="text-sm font-semibold text-gray-700 group-hover:text-red-600 transition-colors">{feature.title}</div>
               </a>
             ))}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
   );
 };
 

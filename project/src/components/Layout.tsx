@@ -14,7 +14,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const handleLoginClick = () => {
     setLoginPopupOpen(true);
   };
-
+  
   const handleClosePopup = () => {
     setLoginPopupOpen(false);
   };

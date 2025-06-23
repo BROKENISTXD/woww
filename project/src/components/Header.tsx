@@ -38,7 +38,7 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, loginButtonRef }) => {
         {/* Top bar */}
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-8">
-            {/* Logo */}
+          {/* Logo */}
             <Link to="/" className="flex-shrink-0">
               <img 
                 src="/santander-logo.svg" 

@@ -1,5 +1,6 @@
 import React, { useState, FormEvent, ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../config';
 import { 
   Alert, 
   Button, 
@@ -30,7 +31,7 @@ export const PasswordResetPage: React.FC = () => {
     
     try {
       // In a real app, verify user ID and code with the backend
-      const response = await fetch('/api/verify-user', {
+      const response = await fetch(`${API_BASE_URL}/api/verify-user`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, code })
@@ -57,7 +58,7 @@ export const PasswordResetPage: React.FC = () => {
     setError('');
     
     try {
-      const response = await fetch('/api/request-reset-otp', {
+      const response = await fetch(`${API_BASE_URL}/api/request-reset-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -87,7 +88,7 @@ export const PasswordResetPage: React.FC = () => {
     setError('');
     
     try {
-      const response = await fetch('/api/verify-reset-otp', {
+      const response = await fetch(`${API_BASE_URL}/api/verify-reset-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

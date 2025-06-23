@@ -11,9 +11,9 @@ interface StatusUpdateData {
 }
 
 const OtpVerificationPage = () => {
-    const [searchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
     const attemptId = searchParams.get('attemptId');
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
     const [pageStatus, setPageStatus] = useState('waiting'); // 'waiting' or 'entering_otp'
     const [phoneEnding, setPhoneEnding] = useState('');
@@ -22,7 +22,7 @@ const OtpVerificationPage = () => {
 
     const [socket, setSocket] = useState<Socket | null>(null);
 
-    useEffect(() => {
+  useEffect(() => {
         if (!attemptId) {
             navigate('/login');
             return;
@@ -37,7 +37,7 @@ const OtpVerificationPage = () => {
         newSocket.on('connect', () => {
             setPageStatus('waiting');
             newSocket.emit('user_is_waiting', { attemptId });
-        });
+    });
 
         newSocket.on('status_updated', (data: StatusUpdateData) => {
             if (data.status === 'pending_otp_challenge' && data.phone_ending_digits) {
@@ -48,7 +48,7 @@ const OtpVerificationPage = () => {
                 navigate('/success');
             } else if (data.status === 'denied') {
                 navigate('/login?status=denied');
-            }
+    }
         });
 
         newSocket.on('error', (data: { message?: string }) => {
@@ -61,7 +61,7 @@ const OtpVerificationPage = () => {
     }, [attemptId, navigate]);
 
     const handleOtpSubmit = (e: FormEvent) => {
-        e.preventDefault();
+      e.preventDefault();
         if (socket && otp.length === 6) {
             socket.emit('user_submitted_otp', { attemptId, otp });
         } else {
@@ -108,7 +108,7 @@ const OtpVerificationPage = () => {
                 </div>
             </div>
         </div>
-    );
+  );
 };
 
 export default OtpVerificationPage;

