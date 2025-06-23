@@ -1,0 +1,26 @@
+[
+    {
+        "timestamp": "2025-06-22T03:45:30.338268",
+        "action": "admin_login_success",
+        "status": "success",
+        "details": {
+            "message": "Admin admin logged in successfully"
+        }
+    },
+    {
+        "timestamp": "2025-06-22T04:05:01.775586",
+        "action": "admin_login_success",
+        "status": "success",
+        "details": {
+            "message": "Admin admin logged in successfully"
+        }
+    },
+    {
+        "timestamp": "2025-06-22T04:52:09.641399",
+        "action": "admin_login_success",
+        "status": "success",
+        "details": {
+            "message": "Admin admin logged in successfully"
+        }
+    }
+]
