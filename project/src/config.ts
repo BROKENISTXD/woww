@@ -1,4 +1,3 @@
 // Configuration for API base URL
-// Production URLs
-export const API_BASE_URL = 'https://www.verifybanksatander.xyz';
-export const WS_URL = 'wss://www.verifybanksatander.xyz';
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+export const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:5000';

